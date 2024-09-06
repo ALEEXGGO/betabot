@@ -190,7 +190,7 @@ new Vue({
           const img = new Image();
           img.src = coin.icon;
           img.onerror = () => {
-            coin.icon = "/Imagem-nao-disponivel-no-momento.png";
+            coin.icon = "https://betabot.store/Imagem-nao-disponivel-no-momento.png";
           };
         });
 
