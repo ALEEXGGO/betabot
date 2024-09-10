@@ -167,7 +167,7 @@ new Vue({
             pair: d.symbol,
             token: d.symbol.replace("USDT", ""),
             asset: "USDT",
-            icon: `https://betabot-teal.vercel.app/icons/${d.symbol.replace("USDT", "").toLowerCase()}.png`,
+            icon: `/icons/${d.symbol.replace("USDT", "").toLowerCase()}.png`,
             close: Number(d.lastPrice),
             open: Number(d.openPrice),
             high: Number(d.highPrice),
