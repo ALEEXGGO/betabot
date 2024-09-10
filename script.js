@@ -105,8 +105,8 @@ new Vue({
       coins: [],
       longShortRatios: {},
       sort: {
-        key: "token",
-        order: "asc",
+        key: "percent",
+        order: "desc",
       },
       socket: null,
       lastListedCoin: null, // Estado para a última moeda listada
