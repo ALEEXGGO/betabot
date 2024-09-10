@@ -98,15 +98,15 @@ new Vue({
   data() {
     return {
       search: "",
-      limit: 20,
+      limit: 40,
       asset: "USDT",
       status: 0,
       loaderVisible: true,
       coins: [],
       longShortRatios: {},
       sort: {
-        key: "token",
-        order: "asc",
+        key: "percent",
+        order: "desc",
       },
       socket: null,
       lastListedCoin: null, // Estado para a última moeda listada
@@ -167,7 +167,7 @@ new Vue({
             pair: d.symbol,
             token: d.symbol.replace("USDT", ""),
             asset: "USDT",
-            icon: `/icons/${d.symbol.replace("USDT", "").toLowerCase()}.png`,
+            icon: `https://betabot-teal.vercel.app/icons/${d.symbol.replace("USDT", "").toLowerCase()}.png`,
             close: Number(d.lastPrice),
             open: Number(d.openPrice),
             high: Number(d.highPrice),
