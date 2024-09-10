@@ -1,12 +1,23 @@
 <!DOCTYPE html>
-<html lang="pt">
+<html lang="pt-BR">
 <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Visualize as principais moedas de futuros da Binance, com gráficos ao vivo e informações de volatilidade.">
+  <meta property="og:title" content="Futuros Binance - betabot.org">
+  <meta property="og:description" content="Monitoramento em tempo real dos futuros da Binance com gráficos e análises detalhadas.">
+  <meta property="og:image" content="https://betabot.org/image-preview.png">
+  <meta property="og:url" content="https://betabot.org">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Futuros Binance - betabot.org">
+  <meta name="twitter:description" content="Monitoramento em tempo real dos futuros da Binance.">
+  <meta name="twitter:image" content="https://betabot.org/image-preview.png">
   
   <title>Futuros Binance - betabot.org</title>
-  <link rel="stylesheet" href="style.css" />
-  <link rel="shortcut icon" href="beta.ico" />
-
-
+  
+  <link rel="preload" href="beta.ico" as="image">
+  <link rel="stylesheet" href="style.css">
+  <link rel="shortcut icon" href="beta.ico">
 
   <style>
     .telegram-float {
@@ -17,25 +28,26 @@
       cursor: pointer;
       transition: transform 0.20s ease-in-out;
     }
-
+    
     .telegram-float:hover {
       transform: scale(1.1);
     }
+
     .last-listed-coin {
       margin-left: 10px;
       font-size: 1.2em;
       font-weight: bold;
       color: #FFD700;
-      animation: slide 5s ease-in-out infinite; /* Ajustando a animação para 7 segundos */
+      animation: slide 7s ease-in-out infinite;
       white-space: nowrap;
     }
 
     @keyframes slide {
       50% {
-        transform: translateX(0%); /* Movendo de 50% da largura para a esquerda */
+        transform: translateX(0%);
       }
       50% {
-        transform: translateX(-0%); /* Movendo de 50% da largura para a direita */
+        transform: translateX(-0%);
       }
     }
 
@@ -43,10 +55,18 @@
       display: flex;
       align-items: center;
     }
+
+    /* Responsividade */
+    @media (max-width: 768px) {
+      .main-grid-list {
+        grid-template-columns: 1fr;
+      }
+      .main-grid-item {
+        margin-bottom: 20px;
+      }
+    }
   </style>
 </head>
-
-  
 <body>
   <div id="app" v-cloak>
     <header class="header-wrap">
@@ -54,12 +74,12 @@
         <div class="if-small">
           <div class="form-input dark">
             <div class="push-right">🔎</div>
-            <input type="text" v-model="search" placeholder="Buscar TOKEN" />
+            <input type="text" v-model="search" placeholder="Buscar TOKEN" aria-label="Buscar TOKEN" />
           </div>
         </div>
         <div class="text-primary if-medium">
-          <a class="logo-footer" >
-            <img src="./betafuturos.svg" width="200" height="90" alt="Beta Bot Futuros">
+          <a class="logo-footer">
+            <img src="./betafuturos.svg" width="200" height="90" alt="Logo do Beta Bot Futuros">
             <span v-if="lastListedCoin" class="last-listed-coin">Último Token Listado: {{ lastListedCoin }}</span>
           </a>
         </div>
@@ -78,13 +98,13 @@
           <div class="dropdown">
             <div class="form-input text-nowrap shadow-box">▼ {{ sortLabel }}</div>
             <ul>
-              <li @click="sortBy('token', 'asc')"><span class="text-faded"></span> Token</li>
-              <li @click="sortBy('close', 'desc')"><span class="text-faded"></span> Price</li>
-              <li @click="sortBy('assetVolume', 'desc')"><span class="text-faded"></span> Volume</li>
-              <li @click="sortBy('percent', 'desc')"><span class="text-faded"></span> Percent</li>
-              <li @click="sortBy('trades', 'desc')"><span class="text-faded"></span> Trades</li>
-              <li @click="sortBy('longShortRatio', 'asc')"><span class="text-faded"></span> Long/Short</li>
-              <li @click="sortBy('volatility', 'desc')"><span class="text-faded"></span> Volatility</li>
+              <li @click="sortBy('token', 'asc')">Token</li>
+              <li @click="sortBy('close', 'desc')">Price</li>
+              <li @click="sortBy('assetVolume', 'desc')">Volume</li>
+              <li @click="sortBy('percent', 'desc')">Percent</li>
+              <li @click="sortBy('trades', 'desc')">Trades</li>
+              <li @click="sortBy('longShortRatio', 'asc')">Long/Short</li>
+              <li @click="sortBy('volatility', 'desc')">Volatility</li>
             </ul>
           </div>
           <div class="dropdown">
@@ -96,12 +116,13 @@
         </div>
       </div>
     </header>
+    
     <main class="main-wrap">
       <div class="main-grid-list">
         <div class="main-grid-item" v-for="c in coinsList" :key="c.symbol" :class="c.style">
           <div class="main-grid-info flex-row flex-top flex-stretch">
             <div class="push-right">
-              <img :src="c.icon" :alt="c.pair" />
+              <img :src="c.icon" :alt="'Ícone de ' + c.pair" />
             </div>
             <div class="flex-1 shadow-text">
               <div class="flex-row flex-top flex-space">
@@ -143,19 +164,18 @@
     </main>
 
     <div class="loader-wrap" :class="{ 'visible': loaderVisible }">
-      <img src="painel.gif" alt="Beta Bot" v-if="status !== 3" class="loading" style="width: 350px; height: 350px;">
+      <img src="painel.gif" alt="Carregando Beta Bot" v-if="status !== 3" class="loading" style="width: 350px; height: 350px;">
       <div v-if="status === 0"></div>
       <div v-if="status === 1"></div>
       <div v-if="status === 2">SEJA BEM-VINDO!</div>
     </div>
   </div>
-
    
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.7.16/vue.min.js"></script> 
+  <script async src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.7.16/vue.min.js"></script>
   <script src="script.js"></script>
 
   <a href="https://t.me/BETABOTROMPIMENTO" target="_blank" class="telegram-float">
-    <img src="/rastreador/telegram.png" alt="Telegram Icon" style="width: 50px; height: 50px;">
+    <img src="/rastreador/telegram.png" alt="Link para Telegram" style="width: 50px; height: 50px;">
   </a>
 
 </body>

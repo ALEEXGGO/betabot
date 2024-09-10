@@ -39,17 +39,9 @@ Vue.component("linechart", {
     lineWidth: { type: Number, default: 2 }
   },
   template: `
-<div>
-  <canvas :width="width" :height="height"></canvas>
-  <span v-if="volatility >= 10" class="volatility-text" style="margin-left: 10px; color: green;">
-       
-
-  </span>
-  <span v-else class="volatility-text" style="margin-left: 10px; color: red;">
-            
-
-  </span>
-</div>
+    <div>
+      <canvas :width="width" :height="height"></canvas>
+    </div>
   `,
   watch: {
     values: 'renderChart',
@@ -101,7 +93,7 @@ new Vue({
       limit: 20,
       asset: "USDT",
       status: 0,
-      loaderVisible: true,
+      loaderVisible: false,
       coins: [],
       longShortRatios: {},
       sort: {
@@ -238,13 +230,7 @@ new Vue({
         }
       };
 
-      // Initial fetch
       await Promise.all(symbols.map(symbol => fetchLongShortRatio(symbol)));
-
-      // Set interval to update every 5 minutes
-      setInterval(async () => {
-        await Promise.all(symbols.map(symbol => fetchLongShortRatio(symbol)));
-      }, 300000); // 5 minutes in milliseconds
     },
     updateCoinsWithRatios() {
       this.coins = this.coins.map(coin => ({
@@ -252,105 +238,52 @@ new Vue({
         longShortRatio: this.longShortRatios[coin.symbol] || 'N/A',
       }));
     },
-    setLimit(limit) {
-      this.limit = limit;
-    },
-    filterAsset(asset) {
-      this.asset = asset;
-    },
-    sortBy(key, order) {
-      this.sort.key = key;
-      this.sort.order = order;
-    },
-    connectSocket() {
-      const url = "wss://fstream.binance.com/stream";
-      const stream = "!ticker@arr";
-      this.socket = new WebSocket(`${url}?streams=${stream}`);
-
-      this.socket.onopen = () => {
-        this.loaderVisible = false;
-        console.log("WebSocket connection opened.");
-      };
-
-      this.socket.onmessage = (event) => {
-        const data = JSON.parse(event.data).data;
-        this.updateCoinPrices(data);
-      };
-
-      this.socket.onclose = () => {
-        console.log("WebSocket connection closed. Reconnecting...");
-        setTimeout(this.connectSocket, 1000);
-      };
-
-      this.socket.onerror = (error) => {
-        console.error("WebSocket error:", error);
-        this.socket.close();
-      };
-    },
-    updateCoinPrices(data) {
-      this.coins = this.coins.map(coin => {
-        const ticker = data.find(t => t.s === coin.symbol);
-        if (ticker) {
-          const newHistory = coin.history.slice(-29).concat(Number(ticker.c));
-          const volatility = ((ticker.h - ticker.l) / ticker.o) * 100; // Exemplo de cálculo de volatilidade
-          return {
-            ...coin,
-            close: Number(ticker.c),
-            change: Number(ticker.p),
-            percent: Number(ticker.P),
-            assetVolume: Number(ticker.q),
-            trades: Number(ticker.n),
-            history: newHistory,
-            volatility: volatility,
-          };
-        }
-        return coin;
-      });
-    },
-    saveLSRToLocalStorage() {
-      const lsrData = JSON.stringify(this.longShortRatios);
-      localStorage.setItem("lsr", lsrData);
-    },
     loadLSRFromLocalStorage() {
-      const lsrData = localStorage.getItem("lsr");
-      if (lsrData) {
-        this.longShortRatios = JSON.parse(lsrData);
+      const savedRatios = localStorage.getItem('longShortRatios');
+      if (savedRatios) {
+        this.longShortRatios = JSON.parse(savedRatios);
         this.updateCoinsWithRatios();
       }
     },
-    toggleDarkMode() {
-      this.isDarkMode = !this.isDarkMode;
+    saveLSRToLocalStorage() {
+      localStorage.setItem('longShortRatios', JSON.stringify(this.longShortRatios));
     },
-    toggleFavorite(coin) {
-      if (this.favoriteCoins.includes(coin.symbol)) {
-        this.favoriteCoins = this.favoriteCoins.filter(fav => fav !== coin.symbol);
+    sortBy(key) {
+      if (this.sort.key === key) {
+        this.sort.order = this.sort.order === "asc" ? "desc" : "asc";
       } else {
-        this.favoriteCoins.push(coin.symbol);
+        this.sort.key = key;
+        this.sort.order = "desc";
       }
-      localStorage.setItem("favoriteCoins", JSON.stringify(this.favoriteCoins));
+    },
+    toggleFavorite(symbol) {
+      if (this.favoriteCoins.includes(symbol)) {
+        this.favoriteCoins = this.favoriteCoins.filter(c => c !== symbol);
+      } else {
+        this.favoriteCoins.push(symbol);
+      }
+      localStorage.setItem('favoriteCoins', JSON.stringify(this.favoriteCoins));
     },
     loadFavoriteCoins() {
-      const favoriteCoins = localStorage.getItem("favoriteCoins");
-      if (favoriteCoins) {
-        this.favoriteCoins = JSON.parse(favoriteCoins);
+      const favorites = localStorage.getItem('favoriteCoins');
+      if (favorites) {
+        this.favoriteCoins = JSON.parse(favorites);
       }
     },
     resetPercentagesAt9PM() {
       const now = new Date();
-      const utcOffset = -3; // Horário de Brasília é UTC-3
-      const hoursUntil9PM = (21 - (now.getUTCHours() + utcOffset) + 24) % 24;
-      const millisecondsUntil9PM = hoursUntil9PM * 60 * 60 * 1000 - (now.getMinutes() * 60 * 1000 + now.getSeconds() * 1000 + now.getMilliseconds());
+      const ninePM = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 21, 0, 0, 0);
+      const msUntil9PM = ninePM - now;
 
       setTimeout(() => {
-        this.resetPositivePercentages();
-        setInterval(this.resetPositivePercentages, 24 * 60 * 60 * 1000); // Repetir a cada 24 horas
-      }, millisecondsUntil9PM);
+        this.coins.forEach(coin => {
+          coin.percent = 0;
+        });
+      }, msUntil9PM);
     },
-    resetPositivePercentages() {
-      this.coins = this.coins.map(coin => ({
-        ...coin,
-        percent: coin.percent > 0 ? 0 : coin.percent,
-      }));
-    },
-  },
+    toggleDarkMode() {
+      this.isDarkMode = !this.isDarkMode;
+      document.body.classList.toggle('dark-mode', this.isDarkMode);
+    }
+  }
 });
