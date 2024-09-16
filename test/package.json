@@ -1,0 +1,23 @@
+{
+  "name": "crypto-icons",
+  "version": "1.0.0",
+  "description": "Collection of icons for various crypto tokens.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rainner/crypto-icons.git"
+  },
+  "keywords": [],
+  "author": "Rainner Lins",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/rainner/crypto-icons/issues"
+  },
+  "homepage": "https://github.com/rainner/crypto-icons#readme",
+  "dependencies": {
+    "axios": "^0.27.2"
+  }
+}
