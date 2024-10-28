@@ -153,9 +153,7 @@
                   </div>
                   <div class="text-clip">{{ c.sign }}{{ c.change | toFixed(asset) }} <small class="text-faded">24h</small></div>
                   <div class="text-clip">{{ c.assetVolume | toMoney }} <small class="text-faded">Vol</small></div>
-                  <div class="text-clip">RSI 15m: {{ c.rsi['15m'] }}</div>
-                  <div class="text-clip">RSI 1d: {{ c.rsi['1d'] }}</div>
-
+                  
                   <div class="text-clip">
                     Volat: {{ c.volatility | toFixed(2) }}%
                     <span v-if="c.volatility >= 15">🔥</span>
