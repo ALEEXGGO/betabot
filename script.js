@@ -354,3 +354,80 @@ new Vue({
     },
   },
 });
+
+// script.js
+
+// Configuração inicial do Vue
+new Vue({
+  el: '#app',
+  data() {
+    return {
+      search: '',
+      coinsList: [],
+      lastListedCoin: '',
+      limit: 10,
+      sortLabel: 'Ordenar por',
+      asset: 'USDT',
+      loaderVisible: true,
+    };
+  },
+  created() {
+    this.fetchData();
+  },
+  methods: {
+    async fetchData() {
+      try {
+        const response = await fetch("https://fapi.binance.com/fapi/v1/ticker/24hr");
+        const data = await response.json();
+        this.coinsList = await this.processCoinsData(data);
+        this.lastListedCoin = data[data.length - 1].symbol; // Ultima moeda listada
+        this.loaderVisible = false;
+      } catch (error) {
+        console.error("Erro ao buscar dados:", error);
+      }
+    },
+    async processCoinsData(data) {
+      return Promise.all(data.map(async (coin) => {
+        const rsi = await this.calculateRSI(coin.symbol);
+        return {
+          symbol: coin.symbol,
+          token: coin.symbol.replace('USDT', ''),
+          asset: 'USDT',
+          close: parseFloat(coin.lastPrice),
+          percent: parseFloat(coin.priceChangePercent),
+          assetVolume: parseFloat(coin.volume),
+          volatility: parseFloat(coin.priceChangePercent), // Exemplo simplificado
+          rsi,  // Inclui RSI calculado
+          style: this.getRSIStyle(rsi)  // Define estilo com base no RSI
+        };
+      }));
+    },
+    async calculateRSI(symbol, period = 14) {
+      const response = await fetch(`https://fapi.binance.com/fapi/v1/klines?symbol=${symbol}&interval=1h&limit=${period + 1}`);
+      const data = await response.json();
+      let gains = 0, losses = 0;
+
+      // Cálculo do RSI baseado na fórmula do índice de força relativa
+      for (let i = 1; i < data.length; i++) {
+        const difference = parseFloat(data[i][4]) - parseFloat(data[i - 1][4]);
+        if (difference >= 0) {
+          gains += difference;
+        } else {
+          losses -= difference;
+        }
+      }
+
+      const avgGain = gains / period;
+      const avgLoss = losses / period;
+      const rs = avgGain / avgLoss;
+      const rsi = 100 - (100 / (1 + rs));
+      return rsi.toFixed(2);
+    },
+    getRSIStyle(rsi) {
+      if (rsi > 70) return 'rsi-overbought';     // Sobrecompra (vermelho)
+      if (rsi < 30) return 'rsi-oversold';       // Sobrevenda (azul)
+      return 'rsi-neutral';                      // Normal
+    }
+  }
+});
+
