@@ -41,6 +41,20 @@
 
 
 
+  /* CSS para estilos de RSI */
+.rsi-overbought {
+  color: red;
+  font-weight: bold;
+}
+.rsi-oversold {
+  color: blue;
+  font-weight: bold;
+}
+.rsi-neutral {
+  color: #FFD700;
+}
+
+
 
 .last-listed-coin {
   margin-left: 5px;
