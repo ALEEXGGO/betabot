@@ -6,6 +6,7 @@
   <link rel="shortcut icon" href="/beta.ico" />
 
   <style>
+    /* CSS para o botão flutuante do Telegram */
     .telegram-float {
       position: fixed;
       bottom: 80px;
@@ -18,37 +19,40 @@
       transform: scale(1.1);
     }
 
+    /* CSS para o banner premium com animação de pulso */
     .premium-banner {
-      position: fixed;
-      bottom: 20px;
-      left: 20px;
+      position: fixed; 
+      bottom: 5px;
+      left: 5px;
       z-index: 100;
-      width: 60px;
+      width: 40px; /* Tamanho reduzido */
       height: auto;
       cursor: pointer;
       opacity: 0.8;
       transition: opacity 0.2s ease-in-out;
-      animation: pulse 2s infinite;
+      animation: pulse 2s infinite; /* Animação de pulso */
     }
     .premium-banner:hover {
       opacity: 1;
     }
 
+    /* Animação de pulso */
     @keyframes pulse {
       0%, 100% {
-        transform: scale(1);
+        transform: scale(1); /* Tamanho original */
       }
       50% {
-        transform: scale(1.1);
+        transform: scale(1.1); /* Aumenta para 10% maior */
       }
     }
 
+    /* CSS para animação do último token listado */
     .last-listed-coin {
       margin-left: 10px;
       font-size: 1.2em;
       font-weight: bold;
       color: #FFD700;
-      animation: slide 7s ease-in-out infinite;
+      animation: slide 0s ease-in-out infinite;
       white-space: nowrap;
     }
 
@@ -61,19 +65,6 @@
       display: flex;
       align-items: center;
     }
-
-    /* Estilos de RSI */
-    .rsi-overbought {
-      color: red;
-      font-weight: bold;
-    }
-    .rsi-oversold {
-      color: blue;
-      font-weight: bold;
-    }
-    .rsi-neutral {
-      color: #FFD700;
-    }
   </style>
 </head>
 
@@ -81,6 +72,7 @@
   <div id="app" v-cloak>
     <header class="header-wrap">
       <div class="header-row flex-row flex-middle flex-space">
+        <!-- Campo de busca -->
         <div class="if-small">
           <div class="form-input dark">
             <div class="push-right">🔎</div>
@@ -88,6 +80,7 @@
           </div>
         </div>
 
+        <!-- Logo e último token listado -->
         <div class="text-primary if-medium">
           <a class="logo-footer">
             <img src="./betafuturos.svg" width="200" height="90" alt="Beta Bot Futuros">
@@ -95,7 +88,9 @@
           </a>
         </div>
 
+        <!-- Controles de visualização -->
         <div class="flex-row flex-middle">
+          <!-- Seleção de limite de visualização -->
           <div class="dropdown">
             <div class="form-input text-nowrap shadow-box">▼ {{ limit }}</div>
             <ul>
@@ -108,6 +103,7 @@
             </ul>
           </div>
 
+          <!-- Opções de classificação -->
           <div class="dropdown">
             <div class="form-input text-nowrap shadow-box">▼ {{ sortLabel }}</div>
             <ul>
@@ -121,6 +117,7 @@
             </ul>
           </div>
 
+          <!-- Filtro de ativo -->
           <div class="dropdown">
             <div class="form-input text-nowrap shadow-box">▼ {{ asset }}</div>
             <ul>
@@ -133,6 +130,7 @@
 
     <main class="main-wrap">
       <div class="main-grid-list">
+        <!-- Listagem de moedas -->
         <div class="main-grid-item" v-for="c in coinsList" :key="c.symbol" :class="c.style">
           <div class="main-grid-info flex-row flex-top flex-stretch">
             <div class="push-right">
@@ -148,7 +146,6 @@
                     {{ c.close | toFixed(asset) }}
                   </h2>
                   <div class="text-clip">LSR: {{ c.longShortRatio }}</div>
-                  <div class="text-clip">RSI: <span :class="getRSIStyle(c.rsi)">{{ c.rsi }}</span></div>
                 </div>
                 <div class="text-right">
                   <div class="color text-big text-clip">
@@ -183,10 +180,12 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.7.16/vue.min.js"></script>
   <script src="script.js"></script>
 
+  <!-- Ícone do Telegram flutuante -->
   <a href="https://t.me/BETABOTROMPIMENTO" target="_blank" class="telegram-float">
     <img src="/rastreador/telegram.png" alt="Telegram Icon" style="width: 50px; height: 50px;">
   </a>
 
+  <!-- Banner premium flutuante com animação -->
   <a href="https://t.me/suportebetabot" target="_blank" class="premium-banner">
     <img src="/premium.png" alt="Premium" />
   </a>
