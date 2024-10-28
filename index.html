@@ -19,20 +19,31 @@
       transform: scale(1.1);
     }
 
-    /* CSS para o banner premium */
+    /* CSS para o banner premium com animação de pulso */
     .premium-banner {
       position: fixed;
       bottom: 20px;
       left: 20px;
       z-index: 1000;
-      width: 150px;
+      width: 120px; /* Tamanho reduzido */
       height: auto;
       cursor: pointer;
       opacity: 0.8;
       transition: opacity 0.2s ease-in-out;
+      animation: pulse 2s infinite; /* Animação de pulso */
     }
     .premium-banner:hover {
       opacity: 1;
+    }
+
+    /* Animação de pulso */
+    @keyframes pulse {
+      0%, 100% {
+        transform: scale(1); /* Tamanho original */
+      }
+      50% {
+        transform: scale(1.1); /* Aumenta para 10% maior */
+      }
     }
 
     /* CSS para animação do último token listado */
@@ -174,9 +185,9 @@
     <img src="/rastreador/telegram.png" alt="Telegram Icon" style="width: 50px; height: 50px;">
   </a>
 
-  <!-- Banner premium flutuante -->
+  <!-- Banner premium flutuante com animação -->
   <a href="https://t.me/suportebetabot" target="_blank" class="premium-banner">
-    <img src="/premium.gif" alt="Banner Premium" />
+    <img src="/premium.gif" alt="Premium" />
   </a>
 </body>
 </html>
