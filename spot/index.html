@@ -9,6 +9,26 @@
   </head>
 
   <body>
+
+    <style>
+    /* CSS para o banner premium com animação de pulso */
+    .premium-banner {
+      position: fixed; 
+      bottom: 5px;
+      left: 5px;
+      z-index: 100;
+      width: 5px; /* Tamanho reduzido */
+      height: auto;
+      cursor: pointer;
+      opacity: 1;
+      transition: opacity 0.2s ease-in-out;
+      animation: pulse 2s infinite; /* Animação de pulso */
+    }
+    .premium-banner:hover {
+      opacity: 1;
+    }
+</style>
+
     <!-- partial:index.partial.html -->
     <!-- vue root -->
     <div id="app" v-cloak>
@@ -172,8 +192,9 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.5.17/vue.min.js"></script>
     <script src="https://betabot.org/spot/script.js"></script>
 
-      <!-- Banner premium flutuante com animação -->
+  <!-- Banner premium flutuante com animação -->
   <a href="https://t.me/suportebetabot" target="_blank" class="premium-banner">
     <img src="/premium.png" alt="Premium" />
-  </body>
-</html>
+   </a>
+ </body>
+ </html>
