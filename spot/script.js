@@ -77,7 +77,7 @@ new Vue({
   // app data
   data: {
     endpoint: "wss://stream.binance.com:9443/ws/!ticker@arr",
-    iconbase: "/icons/",
+    iconbase: "spot/icons/",
     cache: {}, // coins data cache
     coins: [], // live coin list from api
     asset: "USDT", // filter by base asset pair
