@@ -185,7 +185,7 @@ new Vue({
             volatility: 0, // Inicialmente 0, você pode calcular isso conforme necessário
           }));
 
-        // Definindo a imagem padrão como "indisponivel.png" se não estiver disponível
+        // Definindo a imagem padrão como "INDISPONIVEL.PNG" se não estiver disponível
         this.coins.forEach(coin => {
           const img = new Image();
           img.src = coin.icon;
