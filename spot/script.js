@@ -84,7 +84,7 @@ new Vue({
     search: "", // filter by search string
     sort: "percent", // sort by param
     order: "desc", // sort order ( asc, desc )
-    limit: 20, // limit list
+    limit: 50, // limit list
     status: 0, // socket status ( 0: closed, 1: open, 2: active, -1: error )
     sock: null, // socket inst
     cx: 0,
