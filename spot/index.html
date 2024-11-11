@@ -159,23 +159,12 @@
 
       <!-- socket loader -->
       <div class="loader-wrap" :class="{ 'visible': loaderVisible }">
-        <div class="loader-content">
-          <div v-if="status === 0">
-            <i>📡</i> <br />
-            Connecting...
-          </div>
-          <div v-else-if="status === 1">
-            <i>💬</i> <br />
-            Waiting for data...
-          </div>
-          <div v-else-if="status === 2">
-            <i>😃</i> <br />
-            Connected
-          </div>
-          <div v-else-if="status === -1">
-            <i>😡</i> <br />
-            Error connecting ...
-          </div>
+        <img src="painel.gif" alt="Beta Bot" v-if="status !== 3" class="loading" style="width: 350px; height: 350px;">
+        <div v-if="status === 0"></div>
+        <div v-if="status === 1"></div>
+        <div v-if="status === 2">SEJA BEM-VINDO!</div>
+      </div>
+    </div>
         </div>
       </div>
     </div>
